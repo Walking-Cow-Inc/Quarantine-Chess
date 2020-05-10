@@ -233,10 +233,14 @@ public class MainGame {
 		// For Checkmate: 3 parts
 		// Part 1: King is in check and has no available moves
 		
-		// This if check if the black king is in check
+		// This if checks if the black king is in checkmate
 		if((((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck)&&b.board[b.kingPos[0].x][b.kingPos[0].y].displayMoves(b).size() == 0){
 			// Part 2: Some piece can kill the checking piece
 			List<Coordinate> killers = new ArrayList<Coordinate>(getKiller(b, 'b'));
+			Set<Coordinate> betweenMoves = new HashSet<Coordinate>();
+			
+			// This is if the King can't move and there is more than one piece attacking the King
+			// In this case, the King is ded cos he can't move and no other piece can kill or block both
 			if(killers.size() > 1)
 				return 1;
 			
@@ -253,13 +257,43 @@ public class MainGame {
 							return 0;
 				}
 			}
+			// Part 3: Some piece obstructs the checking piece
+			if (b.board[killers.get(0).x][killers.get(0).y] instanceof Bishop)
+				betweenMoves = ((Bishop)b.board[killers.get(0).x][killers.get(0).y]).getBetween(b.kingPos[0]);
+			
+			else if (b.board[killers.get(0).x][killers.get(0).y] instanceof Rook)
+				betweenMoves = ((Rook)b.board[killers.get(0).x][killers.get(0).y]).getBetween(b.kingPos[0]);
+			
+			else if (b.board[killers.get(0).x][killers.get(0).y] instanceof Queen)
+				betweenMoves = ((Queen)b.board[killers.get(0).x][killers.get(0).y]).getBetween(b.kingPos[0]);
+			
+			else
+				return 1;
+			
+			System.out.println("We reached here");
+			
+			Set<Coordinate> allMoves = new HashSet<>();
+			for(Coordinate each : b.black) {
+				if(b.board[each.x][each.y] instanceof King)
+					continue;
+				else
+					allMoves.addAll(b.board[each.x][each.y].displayMoves(b));
+			}
+			// Checks if the Coordinate is present in betweenMoves
+			for(Coordinate each : betweenMoves) {
+				if(allMoves.contains(each))
+					return 0;
+			}	
 			return 1;
 		}
 		
-		//This if checks if the white king is in check
+		//This if checks if the white king is in checkmate
 		if((((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck)&&b.board[b.kingPos[1].x][b.kingPos[1].y].displayMoves(b).size() == 0){
 			// Part 2: Some piece can kill the checking piece
 			List<Coordinate> killers = new ArrayList<Coordinate>(getKiller(b, 'w'));
+			Set<Coordinate> betweenMoves = new HashSet<Coordinate>();
+			// This is if the King can't move and there is more than one piece attacking the King
+			// In this case, the King is ded cos he can't move and no other piece can kill or block both
 			if(killers.size() > 1)
 				return 2;
 			
@@ -274,11 +308,38 @@ public class MainGame {
 				else {
 					if((b.board[each.x][each.y]).displayMoves(b).contains(killers.get(0)))
 							return 0;
-				}
+				}				
 			}
+			// Part 3: Some piece obstructs the checking piece
+			if (b.board[killers.get(0).x][killers.get(0).y] instanceof Bishop)
+				betweenMoves = ((Bishop)b.board[killers.get(0).x][killers.get(0).y]).getBetween(b.kingPos[1]);
+			
+			else if (b.board[killers.get(0).x][killers.get(0).y] instanceof Rook)
+				betweenMoves = ((Rook)b.board[killers.get(0).x][killers.get(0).y]).getBetween(b.kingPos[1]);
+			
+			else if (b.board[killers.get(0).x][killers.get(0).y] instanceof Queen)
+				betweenMoves = ((Queen)b.board[killers.get(0).x][killers.get(0).y]).getBetween(b.kingPos[1]);
+			
+			else
+				return 2;
+			
+			System.out.println("We reached here");
+			
+			Set<Coordinate> allMoves = new HashSet<>();
+			for(Coordinate each : b.white) {
+				if(b.board[each.x][each.y] instanceof King)
+					continue;
+				else
+					allMoves.addAll(b.board[each.x][each.y].displayMoves(b));
+			}
+			// Checks if the Coordinate is present in betweenMoves
+			for(Coordinate each : betweenMoves) {
+				if(allMoves.contains(each))
+					return 0;
+			}
+			
 			return 2;
 		}
-		// Part 3: Some piece obstructs the checking piece
 		return 0;
 	}
 	
@@ -306,4 +367,5 @@ public class MainGame {
 	// Progress Report (A 1 day time leap taken): We forgot
 	// Progress Report (08th  May  11:99 PM IST): Finished Part 2 for checkmate and tested previous work (Both be drunk and dead)
 	// Progress Report (09th  May  11:53 PM IST): We're on GitHub now. Happy birthday Quarantine Inc.
+	// Progress Report (10th  May  11:99 PM IST): Finally finished Checkmate (Should work, almost 100 percent sure)
 }

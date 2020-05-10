@@ -76,4 +76,41 @@ public class Bishop extends Piece{ // IDK
 		
 		return possible;
 	}
+	
+	public Set<Coordinate> getBetween(Coordinate kingPos){
+		Set<Coordinate> between = new HashSet<Coordinate>();
+		if(x > kingPos.x && y > kingPos.y) {
+			int i = x-1, j = y-1;
+			while(i > kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i--;
+				j--;
+			}
+		}
+		else if(x > kingPos.x && y < kingPos.y) {
+			int i = x-1, j = y+1;
+			while(i > kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i--;
+				j++;
+			}
+		}
+		else if(x < kingPos.x && y > kingPos.y) {
+			int i = x+1, j = y-1;
+			while(i < kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i++;
+				j--;
+			}
+		}
+		else if(x < kingPos.x && y < kingPos.y){
+			int i = x+1, j = y+1;
+			while(i < kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i++;
+				j++;
+			}
+		}
+		return between;
+	}
 }

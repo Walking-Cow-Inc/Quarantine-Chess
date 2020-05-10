@@ -120,4 +120,65 @@ public class Queen extends Piece{ // We don't have
 		
 		return possible;
 	}
+	
+	public Set<Coordinate> getBetween(Coordinate kingPos){
+		Set<Coordinate> between = new HashSet<Coordinate>();
+		if(x > kingPos.x && y > kingPos.y) {
+			int i = x-1, j = y-1;
+			while(i > kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i--;
+				j--;
+			}
+		}
+		else if(x > kingPos.x && y < kingPos.y) {
+			int i = x-1, j = y+1;
+			while(i > kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i--;
+				j++;
+			}
+		}
+		else if(x < kingPos.x && y > kingPos.y) {
+			int i = x+1, j = y-1;
+			while(i < kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i++;
+				j--;
+			}
+		}
+		else if(x < kingPos.x && y < kingPos.y){
+			int i = x+1, j = y+1;
+			while(i < kingPos.x) {
+				between.add(new Coordinate(i, j));
+				i++;
+				j++;
+			}
+		}
+		else if(x == kingPos.x && y > kingPos.y) {
+			int j = y-1;
+			while(j > kingPos.y) {
+				between.add(new Coordinate(x, j));
+			}
+		}
+		else if(x == kingPos.x && y < kingPos.y) {
+			int j = y+1;
+			while(j < kingPos.y) {
+				between.add(new Coordinate(x, j));
+			}
+		}
+		else if(y == kingPos.y && x > kingPos.x) {
+			int i = x-1;
+			while(i > kingPos.x) {
+				between.add(new Coordinate(i, y));
+			}
+		}
+		else if(y == kingPos.y && x < kingPos.x) {
+			int i = x+1;
+			while(i < kingPos.x) {
+				between.add(new Coordinate(i, y));
+			}
+		}
+		return between;
+	}
 }
