@@ -27,186 +27,209 @@ public class MainGame {
 		int x = 0, y = 0, newx, newy;
 		Scanner sc = new Scanner(System.in);
 		Set<Coordinate> possible = new HashSet<>();
-		
-		while(gameNotOver(b) == 0) {
+		int over = 0;
+		while(over == 0) {
 			switch(turn) {
-			case 'w': System.out.println("White's turn");
-			System.out.println("Enter the piece which you want to move");
-			x = sc.nextInt();
-			y = sc.nextInt();
-			if(x > 7 || x < 0 || y > 7 || y < 0) {
-				System.out.println("Out of your limits, just like she was\n\n"); // Change before showing
-				continue;
-			}
-			if(b.board[x][y] == null || b.board[x][y].race != turn || b.board[x][y].displayMoves(b).isEmpty()) {
-				System.out.println("No chances, in more than one way");
-				System.out.print("It's still ");
-				continue;
-			}
-			// It's not empty
-			possible = b.board[x][y].displayMoves(b);
-			System.out.print("The allowed moves for this piece are: \n| ");
-			for(Coordinate each : possible) {
-				System.out.print(each + " | ");
-			}
-			System.out.println("\n");
-			turn = 'b';
+			case 'w': 
+			do {
+				System.out.println("White's turn");
+				System.out.println("Enter the piece which you want to move");
+				x = sc.nextInt();
+				y = sc.nextInt();
+				if(x > 7 || x < 0 || y > 7 || y < 0) {
+					System.out.println("Out of your limits, just like she was\n\n"); // Change before showing
+					continue;
+				}
+				if(b.board[x][y] == null || b.board[x][y].race != turn || b.board[x][y].displayMoves(b).isEmpty()) {
+					System.out.println("No chances, in more than one way");
+					System.out.print("It's still ");
+					continue;
+				}
+				// It's not empty
+				possible = b.board[x][y].displayMoves(b);
+				System.out.print("The allowed moves for this piece are: \n| ");
+				for(Coordinate each : possible) {
+					System.out.print(each + " | ");
+				}
+				System.out.println("\n");
+				turn = 'b';
+				Board old = new Board(b);
+				over = moves(b, x, y, possible);
+				if(over != 0)
+					break;
+				// This is not a checkmate
+				if(((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck) {
+						// This means the move was invalid
+						b = new Board(old);
+						System.out.println("Move was invalid, try not to kill ur King");
+						turn = 'w';
+					}
+				System.out.println(b);
+			}while(((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck);
 			break;
 			
-			case 'b': System.out.println("Black's turn");
-			System.out.println("Enter the piece which you want to move");
-			x = sc.nextInt();
-			y = sc.nextInt();
-			if(x > 7 || x < 0 || y > 7 || y < 0) {
-				System.out.println("Out of your limits, just like she was\n\n"); // Change before showing
-				continue;
-			}
-			if(b.board[x][y] == null || b.board[x][y].race != turn || b.board[x][y].displayMoves(b).isEmpty()) {
-				System.out.println("No chances, in more than one way");
-				System.out.print("It's still ");
-				continue;
-			}
-			// It's not empty
-			possible = b.board[x][y].displayMoves(b);
-			System.out.print("The allowed moves for this piece are: \n| ");
-			for(Coordinate each : possible) {
-				System.out.print(each + " | ");
-			}
-			System.out.println("\n");
-			turn = 'w';
+			case 'b':
+			do {	
+				System.out.println("Black's turn");
+				System.out.println("Enter the piece which you want to move");
+				x = sc.nextInt();
+				y = sc.nextInt();
+				if(x > 7 || x < 0 || y > 7 || y < 0) {
+					System.out.println("Out of your limits, just like she was\n\n"); // Change before showing
+					continue;
+				}
+				if(b.board[x][y] == null || b.board[x][y].race != turn || b.board[x][y].displayMoves(b).isEmpty()) {
+					System.out.println("No chances, in more than one way");
+					System.out.print("It's still ");
+					continue;
+				}
+				// It's not empty
+				possible = b.board[x][y].displayMoves(b);
+				System.out.print("The allowed moves for this piece are: \n| ");
+				for(Coordinate each : possible) {
+					System.out.print(each + " | ");
+				}
+				System.out.println("\n");
+				turn = 'w';
+				Board old = new Board(b);
+				over = moves(old, x, y, possible);
+				if(over != 0)
+					break;
+				// This is not a checkmate
+				if(((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck) {
+						// This means the move was invalid
+						b = new Board(old);
+						System.out.println("Move was invalid, try not to kill ur King");
+						turn = 'b';
+					}
+				System.out.println(b);
+			} while(((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck);
 			break;
-			}
-			
-			// Where to move the piece
-			int a = 1;
-			while(a != 0) {
-				System.out.println("Enter the position where you want to move this piece to");
-				newx = sc.nextInt();
-				newy = sc.nextInt();
-				
-				if(b.board[x][y] instanceof King) {
-					
-					// This part is only to move the Rook
-					if(newy - y == 2) {
-						b.board[x][5] = b.board[x][7];
-						b.board[x][5].y = 5;
-						b.board[x][7] = null;
-						switch(x) {
-						case 0: b.black.remove(new Coordinate(0, 7));
-						b.black.add(new Coordinate(0, 5));
-						break;
-						
-						case 7: b.white.remove(new Coordinate(7, 7));
-						b.white.add(new Coordinate(7, 5));
-						break;
-						}
-					}
-					else if(y - newy == 2) {
-						b.board[x][3] = b.board[x][0];
-						b.board[x][3].y = 3;
-						b.board[x][0] = null;
-						switch(x) {
-						case 0: b.black.remove(new Coordinate(0, 0));
-						b.black.add(new Coordinate(0, 3));
-						break;
-						
-						case 7: b.white.remove(new Coordinate(7, 0));
-						b.white.add(new Coordinate(7, 3));
-						break;
-						}
-					}
-					
-					// To add the new King positions to the array
-					switch(b.board[x][y].race) {
-					case 'b': b.kingPos[0] = new Coordinate(newx, newy);
-					break;
-					case 'w': b.kingPos[1] = new Coordinate(newx, newy);
-					break;
-					}
-				}
-				
-				if(possible.contains(new Coordinate(newx, newy))) {
-					
-					b.board[newx][newy] = b.board[x][y]; // Changes the position of the old piece on the board
-					b.board[newx][newy].x = newx;
-					b.board[newx][newy].y = newy;
-					b.board[newx][newy].move++;
-					
-					if(b.board[x][y].race == 'b') {
-						b.black.remove(new Coordinate(x, y));
-						b.black.add(new Coordinate(newx, newy));
-						b.white.remove(new Coordinate(newx, newy));
-					}
-					
-					else {
-						b.white.remove(new Coordinate(x, y));
-						b.white.add(new Coordinate(newx, newy));
-						b.black.remove(new Coordinate(newx, newy));
-					}
-					
-					if(b.board[newx][newy] instanceof Pawn)
-						((Pawn)b.board[newx][newy]).convertIfPossible(b);
-					
-					b.board[x][y] = null; // Move is complete
-					System.out.println(b);
-					
-					Set<Coordinate> moves = new HashSet<Coordinate>();
-					switch(b.board[newx][newy].race) {
-					case 'b': for(Coordinate each : b.black) {
-						if(b.board[each.x][each.y] instanceof King)
-							continue;
-						if(b.board[each.x][each.y] instanceof Pawn)
-							moves.addAll(((Pawn)(b.board[each.x][each.y])).killableMoves(b));
-						else
-							moves.addAll(b.board[each.x][each.y].displayMoves(b));
-					}
-					// Now we have all the moves of the black pieces
-					if(moves.contains(b.kingPos[1])){
-						System.out.println("Check");
-						((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck = true;
-					}
-						break;
-					case 'w': for(Coordinate each : b.white) {
-						if(b.board[each.x][each.y] instanceof King)
-							continue;
-						if(b.board[each.x][each.y] instanceof Pawn)
-							moves.addAll(((Pawn)(b.board[each.x][each.y])).killableMoves(b));
-						else
-							moves.addAll(b.board[each.x][each.y].displayMoves(b));
-					}
-					// Now we have all the moves of the white pieces
-					if(moves.contains(b.kingPos[0])){
-						System.out.println("Check");
-						((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck = true;
-					}
-					break;
-					}
-					
-					a = 0;
-				}
-				else {
-					System.out.print("Re-");
-				}
 			}
 		}
-		if(gameNotOver(b) == 1)
+		
+		if(over == 1)
 			System.out.println("White wins. I don't have a dream");
-		else if(gameNotOver(b) == 2)
+		else if(over == 2)
 			System.out.println("Black wins. Slavery is no more");
 		else
 			System.out.println("Well that was pointless");
 	}
-		
-		
-		
-//		for(int i = 0; i < 8; i++) {
-//			Set<Coordinate> possible = b.board[7][i].displayMoves(b);
-//			System.out.println("This piece is: 7, " + i);
-//			for(Coordinate each : possible) {
-//				System.out.println(each);
-//			}
-//			System.out.println("\n\n");
-//		}
+	
+	private static int moves(Board b, int x, int y, Set<Coordinate> possible) {
+		int newx, newy;
+		Scanner sc = new Scanner(System.in);
+		int a = 1;
+		while(a != 0) {
+			System.out.println("Enter the position where you want to move this piece to");
+			newx = sc.nextInt();
+			newy = sc.nextInt();
+			
+			if(b.board[x][y] instanceof King) {
+				
+				// This part is only to move the Rook
+				if(newy - y == 2) {
+					b.board[x][5] = b.board[x][7];
+					b.board[x][5].y = 5;
+					b.board[x][7] = null;
+					switch(x) {
+					case 0: b.black.remove(new Coordinate(0, 7));
+					b.black.add(new Coordinate(0, 5));
+					break;
+					
+					case 7: b.white.remove(new Coordinate(7, 7));
+					b.white.add(new Coordinate(7, 5));
+					break;
+					}
+				}
+				else if(y - newy == 2) {
+					b.board[x][3] = b.board[x][0];
+					b.board[x][3].y = 3;
+					b.board[x][0] = null;
+					switch(x) {
+					case 0: b.black.remove(new Coordinate(0, 0));
+					b.black.add(new Coordinate(0, 3));
+					break;
+					
+					case 7: b.white.remove(new Coordinate(7, 0));
+					b.white.add(new Coordinate(7, 3));
+					break;
+					}
+				}
+				
+				// To add the new King positions to the array
+				switch(b.board[x][y].race) {
+				case 'b': b.kingPos[0] = new Coordinate(newx, newy);
+				break;
+				case 'w': b.kingPos[1] = new Coordinate(newx, newy);
+				break;
+				}
+			}
+			
+			if(possible.contains(new Coordinate(newx, newy))) {
+				
+				b.board[newx][newy] = b.board[x][y]; // Changes the position of the old piece on the board
+				b.board[newx][newy].x = newx;
+				b.board[newx][newy].y = newy;
+				b.board[newx][newy].move++;
+				
+				if(b.board[x][y].race == 'b') {
+					b.black.remove(new Coordinate(x, y));
+					b.black.add(new Coordinate(newx, newy));
+					b.white.remove(new Coordinate(newx, newy));
+				}
+				
+				else {
+					b.white.remove(new Coordinate(x, y));
+					b.white.add(new Coordinate(newx, newy));
+					b.black.remove(new Coordinate(newx, newy));
+				}
+				
+				if(b.board[newx][newy] instanceof Pawn)
+					((Pawn)b.board[newx][newy]).convertIfPossible(b);
+				
+				b.board[x][y] = null; // Move is complete
+				
+				Set<Coordinate> moves = new HashSet<Coordinate>();
+				switch(b.board[newx][newy].race) {
+				case 'b': for(Coordinate each : b.black) {
+					if(b.board[each.x][each.y] instanceof King)
+						continue;
+					if(b.board[each.x][each.y] instanceof Pawn)
+						moves.addAll(((Pawn)(b.board[each.x][each.y])).killableMoves(b));
+					else
+						moves.addAll(b.board[each.x][each.y].displayMoves(b));
+				}
+				// Now we have all the moves of the black pieces
+				if(moves.contains(b.kingPos[1])){
+					System.out.println("Check");
+					((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck = true;
+				}
+					break;
+				case 'w': for(Coordinate each : b.white) {
+					if(b.board[each.x][each.y] instanceof King)
+						continue;
+					if(b.board[each.x][each.y] instanceof Pawn)
+						moves.addAll(((Pawn)(b.board[each.x][each.y])).killableMoves(b));
+					else
+						moves.addAll(b.board[each.x][each.y].displayMoves(b));
+				}
+				// Now we have all the moves of the white pieces
+				if(moves.contains(b.kingPos[0])){
+					System.out.println("Check");
+					((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck = true;
+				}
+				break;
+				}
+				
+				a = 0;
+			}
+			else {
+				System.out.print("Re-");
+			}
+		}
+		return gameNotOver(b);
+	}
 
 	private static List<Coordinate> getKiller(Board b, char race){
 		List<Coordinate> killers = new ArrayList<>();
@@ -229,6 +252,7 @@ public class MainGame {
 		return killers;
 	}
 	
+	// TODO: Add stalemate and stuff
 	private static int gameNotOver(Board b) {
 		// For Checkmate: 3 parts
 		// Part 1: King is in check and has no available moves
@@ -269,8 +293,6 @@ public class MainGame {
 			
 			else
 				return 1;
-			
-			System.out.println("We reached here");
 			
 			Set<Coordinate> allMoves = new HashSet<>();
 			for(Coordinate each : b.black) {
@@ -323,8 +345,6 @@ public class MainGame {
 			else
 				return 2;
 			
-			System.out.println("We reached here");
-			
 			Set<Coordinate> allMoves = new HashSet<>();
 			for(Coordinate each : b.white) {
 				if(b.board[each.x][each.y] instanceof King)
@@ -368,4 +388,5 @@ public class MainGame {
 	// Progress Report (08th  May  11:99 PM IST): Finished Part 2 for checkmate and tested previous work (Both be drunk and dead)
 	// Progress Report (09th  May  11:53 PM IST): We're on GitHub now. Happy birthday Quarantine Inc.
 	// Progress Report (10th  May  11:99 PM IST): Finally finished Checkmate (Should work, almost 100 percent sure)
+	// Progress Report (11th  May  11:99 PM IST): Tried to finish check. Think we came close, but didn't finish (That's what she said)
 }

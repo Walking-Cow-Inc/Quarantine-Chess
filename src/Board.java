@@ -72,6 +72,20 @@ public class Board {
 
 	}
 	
+	public Board(Object o) {
+		Board old = (Board) o;
+		this.black = new HashSet<Coordinate>(old.black);
+		this.white = new HashSet<Coordinate>(old.white);
+		kingPos = new Coordinate[2];
+		this.kingPos[0] = old.kingPos[0];
+		this.kingPos[1] = old.kingPos[1];
+		board = new Piece[8][8];
+		for(int i = 0; i < 8; i++) {
+			for(int j = 0; j < 8; j++)
+				this.board[i][j] = old.board[i][j];
+		}
+	}
+	
 	public String toString() {
 		String retval = "\n    0    1    2    3    4    5    6    7\n\n";
 		for(int i = 0; i < 8; i++) {
