@@ -12,6 +12,14 @@ public class Pawn extends Piece{
 		super(x, y, race, 'P'); // x and y coordinates, the race and the type
 	}
 	
+	public Pawn(Pawn p) {
+		x = p.x;
+		y = p.y;
+		move = p.move;
+		race = p.race;
+		type = p.type;
+	}
+	
 	// TODO: We need to check the edgecases
 	// TODO: (Low priority) Pawn to Queen conversion
 	public Set<Coordinate> displayMoves(Board b) {

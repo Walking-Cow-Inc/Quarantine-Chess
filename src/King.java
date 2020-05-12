@@ -13,6 +13,15 @@ public class King extends Piece{ // We are this
 		super(x, y, race, 'K');
 	}
 	
+	public King(King q) {
+		x = q.x;
+		y = q.y;
+		checkCheck = q.checkCheck;
+		move = q.move;
+		race = q.race;
+		type = q.type;
+	}
+	
 	public Set<Coordinate> displayMoves(Board b){
 		Set<Coordinate> possible = new HashSet<Coordinate>();
 		Set<Coordinate> opponentPieces = (race == 'b') ? b.white : b.black;

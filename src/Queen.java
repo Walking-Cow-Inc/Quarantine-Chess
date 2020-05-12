@@ -11,6 +11,14 @@ public class Queen extends Piece{ // We don't have
 		super(x, y, race, 'Q');
 	}
 	
+	public Queen(Queen q) {
+		x = q.x;
+		y = q.y;
+		move = q.move;
+		race = q.race;
+		type = q.type;
+	}
+	
 	public Set<Coordinate> displayMoves(Board b){
 		Set<Coordinate> possible = new HashSet<Coordinate>();
 		

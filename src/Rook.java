@@ -11,6 +11,14 @@ public class Rook extends Piece{ // Haathi
 		super(x, y, race, 'R');
 	}
 	
+	public Rook(Rook q) {
+		x = q.x;
+		y = q.y;
+		move = q.move;
+		race = q.race;
+		type = q.type;
+	}
+	
 	public Set<Coordinate> displayMoves(Board b){
 		Set<Coordinate> possible = new HashSet<Coordinate>();
 		

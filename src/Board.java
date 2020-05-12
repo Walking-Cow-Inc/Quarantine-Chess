@@ -81,8 +81,26 @@ public class Board {
 		this.kingPos[1] = old.kingPos[1];
 		board = new Piece[8][8];
 		for(int i = 0; i < 8; i++) {
-			for(int j = 0; j < 8; j++)
-				this.board[i][j] = old.board[i][j];
+			for(int j = 0; j < 8; j++) {
+				
+				if(old.board[i][j] instanceof King)
+					this.board[i][j] = new King((King)old.board[i][j]);
+				
+				else if(old.board[i][j] instanceof Queen)
+					this.board[i][j] = new Queen((Queen)old.board[i][j]);
+				
+				else if(old.board[i][j] instanceof Bishop)
+					this.board[i][j] = new Bishop((Bishop)old.board[i][j]);
+				
+				else if(old.board[i][j] instanceof Knight)
+					this.board[i][j] = new Knight((Knight)old.board[i][j]);
+				
+				else if(old.board[i][j] instanceof Rook)
+					this.board[i][j] = new Rook((Rook)old.board[i][j]);
+				
+				else if(old.board[i][j] instanceof Pawn)
+					this.board[i][j] = new Pawn((Pawn)old.board[i][j]);
+			}
 		}
 	}
 	

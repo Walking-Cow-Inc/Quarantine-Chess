@@ -11,6 +11,14 @@ public class Bishop extends Piece{ // IDK
 		super(x, y, race, 'B');
 	}
 	
+	public Bishop(Bishop q) {
+		x = q.x;
+		y = q.y;
+		move = q.move;
+		race = q.race;
+		type = q.type;
+	}
+	
 	public Set<Coordinate> displayMoves(Board b){
 		Set<Coordinate> possible = new HashSet<Coordinate>();
 		

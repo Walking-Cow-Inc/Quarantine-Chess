@@ -11,6 +11,14 @@ public class Knight extends Piece{ // Horse
 		super(x, y, race, 'H');
 	}
 	
+	public Knight(Knight q) {
+		x = q.x;
+		y = q.y;
+		move = q.move;
+		race = q.race;
+		type = q.type;
+	}
+	
 	public Set<Coordinate> displayMoves(Board b){
 		Set<Coordinate> possible = new HashSet<Coordinate>();
 		

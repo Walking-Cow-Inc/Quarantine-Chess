@@ -58,6 +58,8 @@ public class MainGame {
 				if(over != 0)
 					break;
 				// This is not a checkmate
+				System.out.println("Black " + ((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck);		
+				System.out.println("White " + ((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck);			
 				if(((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck) {
 						// This means the move was invalid
 						b = new Board(old);
@@ -92,10 +94,12 @@ public class MainGame {
 				System.out.println("\n");
 				turn = 'w';
 				Board old = new Board(b);
-				over = moves(old, x, y, possible);
+				over = moves(b, x, y, possible);
 				if(over != 0)
 					break;
 				// This is not a checkmate
+				System.out.println("Black " + ((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck);	
+				System.out.println("White " + ((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck);
 				if(((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck) {
 						// This means the move was invalid
 						b = new Board(old);
@@ -192,7 +196,7 @@ public class MainGame {
 				
 				Set<Coordinate> moves = new HashSet<Coordinate>();
 				switch(b.board[newx][newy].race) {
-				case 'b': for(Coordinate each : b.black) {
+				case 'w': for(Coordinate each : b.black) {
 					if(b.board[each.x][each.y] instanceof King)
 						continue;
 					if(b.board[each.x][each.y] instanceof Pawn)
@@ -205,8 +209,11 @@ public class MainGame {
 					System.out.println("Check");
 					((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck = true;
 				}
+				else {
+					((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck = false;
+				}
 					break;
-				case 'w': for(Coordinate each : b.white) {
+				case 'b': for(Coordinate each : b.white) {
 					if(b.board[each.x][each.y] instanceof King)
 						continue;
 					if(b.board[each.x][each.y] instanceof Pawn)
@@ -218,6 +225,9 @@ public class MainGame {
 				if(moves.contains(b.kingPos[0])){
 					System.out.println("Check");
 					((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck = true;
+				}
+				else {
+					((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck = false;
 				}
 				break;
 				}
@@ -258,11 +268,12 @@ public class MainGame {
 		// Part 1: King is in check and has no available moves
 		
 		// This if checks if the black king is in checkmate
+		System.out.println("Function called again");
 		if((((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck)&&b.board[b.kingPos[0].x][b.kingPos[0].y].displayMoves(b).size() == 0){
 			// Part 2: Some piece can kill the checking piece
 			List<Coordinate> killers = new ArrayList<Coordinate>(getKiller(b, 'b'));
 			Set<Coordinate> betweenMoves = new HashSet<Coordinate>();
-			
+			System.out.println(killers);
 			// This is if the King can't move and there is more than one piece attacking the King
 			// In this case, the King is ded cos he can't move and no other piece can kill or block both
 			if(killers.size() > 1)
@@ -273,6 +284,7 @@ public class MainGame {
 				if(b.board[each.x][each.y] instanceof King)
 					continue;
 				if(b.board[each.x][each.y] instanceof Pawn) {
+					System.out.println(b.board[each.x][each.y]);
 					if(((Pawn)b.board[each.x][each.y]).killableMoves(b).contains(killers.get(0)))
 							return 0;
 				}
@@ -314,6 +326,7 @@ public class MainGame {
 			// Part 2: Some piece can kill the checking piece
 			List<Coordinate> killers = new ArrayList<Coordinate>(getKiller(b, 'w'));
 			Set<Coordinate> betweenMoves = new HashSet<Coordinate>();
+			System.out.println(killers);
 			// This is if the King can't move and there is more than one piece attacking the King
 			// In this case, the King is ded cos he can't move and no other piece can kill or block both
 			if(killers.size() > 1)
@@ -324,6 +337,7 @@ public class MainGame {
 				if(b.board[each.x][each.y] instanceof King)
 					continue;
 				if(b.board[each.x][each.y] instanceof Pawn) {
+					System.out.println(b.board[each.x][each.y]);
 					if(((Pawn)b.board[each.x][each.y]).killableMoves(b).contains(killers.get(0)))
 							return 0;
 				}
@@ -389,4 +403,5 @@ public class MainGame {
 	// Progress Report (09th  May  11:53 PM IST): We're on GitHub now. Happy birthday Quarantine Inc.
 	// Progress Report (10th  May  11:99 PM IST): Finally finished Checkmate (Should work, almost 100 percent sure)
 	// Progress Report (11th  May  11:99 PM IST): Tried to finish check. Think we came close, but didn't finish (That's what she said)
+	// Progress Report (12th  May  11:56 PM IST): IT WORKS! (We're done bois, our cow runs without legs) (Until we find some new error)
 }
