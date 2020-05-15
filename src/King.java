@@ -36,6 +36,7 @@ public class King extends Piece{ // We are this
 				opponentMoves.addAll(b.board[each.x][each.y].displayMoves(b));
 		}
 			
+		System.out.println(opponentMoves);
 		
 		// x remains the same
 		if(y + 1 < 8) {

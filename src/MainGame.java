@@ -1,6 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Set;
 
@@ -21,7 +22,7 @@ public class MainGame {
 	
 	private static char turn = 'w'; // w is White and b is Black 
 	
-	public static void main(String args[]) {
+	public static void main(String args[]) throws InputMismatchException{
 		Board b = new Board();  // This makes the board
 		System.out.println(b);
 		int x = 0, y = 0, newx, newy;
@@ -57,9 +58,7 @@ public class MainGame {
 				over = moves(b, x, y, possible);
 				if(over != 0)
 					break;
-				// This is not a checkmate
-				System.out.println("Black " + ((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck);		
-				System.out.println("White " + ((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck);			
+				// This is not a checkmate	
 				if(((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck) {
 						// This means the move was invalid
 						b = new Board(old);
@@ -98,8 +97,6 @@ public class MainGame {
 				if(over != 0)
 					break;
 				// This is not a checkmate
-				System.out.println("Black " + ((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck);	
-				System.out.println("White " + ((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck);
 				if(((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck) {
 						// This means the move was invalid
 						b = new Board(old);
@@ -117,10 +114,10 @@ public class MainGame {
 		else if(over == 2)
 			System.out.println("Black wins. Slavery is no more");
 		else
-			System.out.println("Well that was pointless");
+			System.out.println("Well that was pointless. Stalemate");
 	}
 	
-	private static int moves(Board b, int x, int y, Set<Coordinate> possible) {
+	private static int moves(Board b, int x, int y, Set<Coordinate> possible) throws InputMismatchException{
 		int newx, newy;
 		Scanner sc = new Scanner(System.in);
 		int a = 1;
@@ -195,8 +192,7 @@ public class MainGame {
 				b.board[x][y] = null; // Move is complete
 				
 				Set<Coordinate> moves = new HashSet<Coordinate>();
-				switch(b.board[newx][newy].race) {
-				case 'w': for(Coordinate each : b.black) {
+				for(Coordinate each : b.black) {
 					if(b.board[each.x][each.y] instanceof King)
 						continue;
 					if(b.board[each.x][each.y] instanceof Pawn)
@@ -209,11 +205,10 @@ public class MainGame {
 					System.out.println("Check");
 					((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck = true;
 				}
-				else {
+				else 
 					((King)b.board[b.kingPos[1].x][b.kingPos[1].y]).checkCheck = false;
-				}
-					break;
-				case 'b': for(Coordinate each : b.white) {
+				
+				for(Coordinate each : b.white) {
 					if(b.board[each.x][each.y] instanceof King)
 						continue;
 					if(b.board[each.x][each.y] instanceof Pawn)
@@ -226,17 +221,13 @@ public class MainGame {
 					System.out.println("Check");
 					((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck = true;
 				}
-				else {
+				else 
 					((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck = false;
-				}
-				break;
-				}
 				
 				a = 0;
 			}
-			else {
+			else 
 				System.out.print("Re-");
-			}
 		}
 		return gameNotOver(b);
 	}
@@ -268,12 +259,10 @@ public class MainGame {
 		// Part 1: King is in check and has no available moves
 		
 		// This if checks if the black king is in checkmate
-		System.out.println("Function called again");
 		if((((King)b.board[b.kingPos[0].x][b.kingPos[0].y]).checkCheck)&&b.board[b.kingPos[0].x][b.kingPos[0].y].displayMoves(b).size() == 0){
 			// Part 2: Some piece can kill the checking piece
 			List<Coordinate> killers = new ArrayList<Coordinate>(getKiller(b, 'b'));
 			Set<Coordinate> betweenMoves = new HashSet<Coordinate>();
-			System.out.println(killers);
 			// This is if the King can't move and there is more than one piece attacking the King
 			// In this case, the King is ded cos he can't move and no other piece can kill or block both
 			if(killers.size() > 1)
@@ -284,7 +273,6 @@ public class MainGame {
 				if(b.board[each.x][each.y] instanceof King)
 					continue;
 				if(b.board[each.x][each.y] instanceof Pawn) {
-					System.out.println(b.board[each.x][each.y]);
 					if(((Pawn)b.board[each.x][each.y]).killableMoves(b).contains(killers.get(0)))
 							return 0;
 				}
@@ -326,7 +314,6 @@ public class MainGame {
 			// Part 2: Some piece can kill the checking piece
 			List<Coordinate> killers = new ArrayList<Coordinate>(getKiller(b, 'w'));
 			Set<Coordinate> betweenMoves = new HashSet<Coordinate>();
-			System.out.println(killers);
 			// This is if the King can't move and there is more than one piece attacking the King
 			// In this case, the King is ded cos he can't move and no other piece can kill or block both
 			if(killers.size() > 1)
@@ -337,7 +324,6 @@ public class MainGame {
 				if(b.board[each.x][each.y] instanceof King)
 					continue;
 				if(b.board[each.x][each.y] instanceof Pawn) {
-					System.out.println(b.board[each.x][each.y]);
 					if(((Pawn)b.board[each.x][each.y]).killableMoves(b).contains(killers.get(0)))
 							return 0;
 				}
@@ -374,6 +360,26 @@ public class MainGame {
 			
 			return 2;
 		}
+		return stalemateCheck(b);
+	}
+	
+	public static int stalemateCheck(Board b) {
+		Set<Coordinate> allMoves = new HashSet<Coordinate>();
+		for(Coordinate each : b.black) {
+			allMoves.addAll(b.board[each.x][each.y].displayMoves(b));
+		}
+		System.out.println("Size = " + allMoves.size());
+		if(allMoves.size() == 0)
+			return 69;
+		
+		allMoves = new HashSet<>();
+		for(Coordinate each : b.white) {
+			allMoves.addAll(b.board[each.x][each.y].displayMoves(b));
+		}
+		System.out.println(allMoves.size());
+		if(allMoves.size() == 0)
+			return 69;
+		
 		return 0;
 	}
 	
@@ -404,4 +410,7 @@ public class MainGame {
 	// Progress Report (10th  May  11:99 PM IST): Finally finished Checkmate (Should work, almost 100 percent sure)
 	// Progress Report (11th  May  11:99 PM IST): Tried to finish check. Think we came close, but didn't finish (That's what she said)
 	// Progress Report (12th  May  11:56 PM IST): IT WORKS! (We're done bois, our cow runs without legs) (Until we find some new error)
+	// Progress Report (13th  May  11:99 PM IST): Found a new error yaay! To fix it tomorrow
+	// Progress Report (A 1 day time leap taken): Vatsav be too lazy
+	// Progress Report (15th  May  11:30 PM IST): Fixed check and checkmate issue. Tried to do stalemate, but decided not to, coz (~o~)
 }

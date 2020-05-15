@@ -1,3 +1,4 @@
+import java.util.Collection;
 import java.util.Set;
 
 public class Piece {
@@ -26,6 +27,11 @@ public class Piece {
 	}
 	
 	public Set<Coordinate> displayMoves(Board b) {
+		return null;
+	}
+
+	public Collection<? extends Coordinate> destructiveMoves(Board b) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 	
