@@ -413,4 +413,5 @@ public class MainGame {
 	// Progress Report (13th  May  11:99 PM IST): Found a new error yaay! To fix it tomorrow
 	// Progress Report (A 1 day time leap taken): Vatsav be too lazy
 	// Progress Report (15th  May  11:30 PM IST): Fixed check and checkmate issue. Tried to do stalemate, but decided not to, coz (~o~)
+	// Progress Report (16th  May  11:99 PM IST): Played another game and found another error and fixed it (Also brought a friend, yaay)
 }

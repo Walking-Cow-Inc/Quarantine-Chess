@@ -35,8 +35,6 @@ public class King extends Piece{ // We are this
 			else
 				opponentMoves.addAll(b.board[each.x][each.y].displayMoves(b));
 		}
-			
-		System.out.println(opponentMoves);
 		
 		// x remains the same
 		if(y + 1 < 8) {
@@ -44,7 +42,7 @@ public class King extends Piece{ // We are this
 				possible.add(new Coordinate(x, y+1));
 		}
 		
-		if(y - 1 < 8) {
+		if(y - 1 >= 0) {
 			if(b.board[x][y-1] == null || b.board[x][y-1].race != race)
 				possible.add(new Coordinate(x, y-1));
 		}
