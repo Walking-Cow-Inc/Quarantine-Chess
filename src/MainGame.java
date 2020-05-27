@@ -368,7 +368,6 @@ public class MainGame {
 		for(Coordinate each : b.black) {
 			allMoves.addAll(b.board[each.x][each.y].displayMoves(b));
 		}
-		System.out.println("Size = " + allMoves.size());
 		if(allMoves.size() == 0)
 			return 69;
 		

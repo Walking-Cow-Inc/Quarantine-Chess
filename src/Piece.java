@@ -29,14 +29,5 @@ public class Piece {
 	public Set<Coordinate> displayMoves(Board b) {
 		return null;
 	}
-
-	public Collection<? extends Coordinate> destructiveMoves(Board b) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
-	// TODO: Take in x and y
-	// TODO: Check for possible moves and return the moves (Function)
-	// TODO: Display the possible moves (Only when the moves are more than 0)
 	
 }
